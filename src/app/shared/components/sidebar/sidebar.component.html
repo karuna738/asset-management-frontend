@@ -1,0 +1,77 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed" [class.mobile-open]="isMobileOpen">
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <div class="logo" *ngIf="!isCollapsed">
+      <span class="logo-icon">🏢</span>
+      <span class="logo-text">AssetFlow</span>
+    </div>
+    <!-- <div class="logo-icon-only" *ngIf="isCollapsed">🏢</div> -->
+    
+    <button class="collapse-btn" (click)="toggleSidebar()" [title]="isCollapsed ? 'Expand' : 'Collapse'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline *ngIf="!isCollapsed" points="15 18 9 12 15 6"></polyline>
+        <polyline *ngIf="isCollapsed" points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar-nav">
+    <ul class="nav-menu">
+      <li *ngFor="let item of menuItems" class="nav-item">
+        <!-- Simple Menu Item -->
+        <a
+          *ngIf="!item.children"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link"
+          (click)="closeMobileMenu()"
+        >
+          <span class="nav-icon">{{ item.icon }}</span>
+          <span class="nav-label">{{ item.label }}</span>
+        </a>
+
+        <!-- Menu Item with Submenu -->
+        <button
+          *ngIf="item.children"
+          (click)="toggleSubmenu(item)"
+          class="nav-link nav-parent"
+          [attr.aria-expanded]="!item.isCollapsed"
+        >
+          <span class="nav-icon">{{ item.icon }}</span>
+          <span class="nav-label">{{ item.label }}</span>
+          <span class="expand-icon" *ngIf="!isCollapsed">{{ item.isCollapsed ? '▶' : '▼' }}</span>
+        </button>
+
+        <!-- Submenu -->
+        <ul *ngIf="item.children && !item.isCollapsed" class="nav-submenu">
+          <li *ngFor="let child of item.children" class="nav-subitem">
+            <a
+              [routerLink]="child.route"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="nav-sublink"
+              (click)="closeMobileMenu()"
+            >
+              <span class="nav-icon">{{ child.icon }}</span>
+              <span class="nav-label">{{ child.label }}</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer" *ngIf="!isCollapsed">
+    <p class="version">v1.0.0</p>
+  </div>
+</aside>
+
+<!-- Mobile Overlay -->
+<div
+  *ngIf="isMobileOpen"
+  class="sidebar-overlay"
+  (click)="closeMobileMenu()"
+></div>

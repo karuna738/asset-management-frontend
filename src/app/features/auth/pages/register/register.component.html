@@ -1,4 +1,187 @@
-<div class="register-page">
-  <h2>Register</h2>
-  <!-- form goes here -->
+<div class="auth-container">
+  <div class="auth-wrapper">
+    <!-- Left Side - Brand -->
+    <div class="auth-brand">
+      <div class="brand-content">
+        <h1 class="brand-title">AssetFlow</h1>
+        <p class="brand-subtitle">Asset Management System</p>
+        <div class="brand-features">
+          <div class="feature">
+            <span class="feature-icon">✓</span>
+            <span>Easy Asset Tracking</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">✓</span>
+            <span>Smart Assignments</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">✓</span>
+            <span>Real-time Updates</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Register Form -->
+    <div class="auth-form-container">
+      <div class="form-wrapper">
+        <div class="form-header">
+          <h2>Create Account</h2>
+          <p>Join AssetFlow to manage your assets efficiently</p>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Register Form -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+          <!-- Full Name Field -->
+          <div class="form-group">
+            <label for="fullName" class="form-label">Full Name</label>
+            <input
+              type="text"
+              id="fullName"
+              formControlName="fullName"
+              class="form-input"
+              placeholder="John Doe"
+              [class.error]="fullName?.invalid && fullName?.touched"
+            />
+            <span class="error-text" *ngIf="fullName?.invalid && fullName?.touched">
+              <span *ngIf="fullName?.errors?.['required']">Full name is required</span>
+              <span *ngIf="fullName?.errors?.['minlength']">Name must be at least 3 characters</span>
+            </span>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-input"
+              placeholder="you@example.com"
+              [class.error]="email?.invalid && email?.touched"
+            />
+            <span class="error-text" *ngIf="email?.invalid && email?.touched">
+              <span *ngIf="email?.errors?.['required']">Email is required</span>
+              <span *ngIf="email?.errors?.['email']">Please enter a valid email</span>
+            </span>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="password-input-wrapper">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                formControlName="password"
+                class="form-input"
+                placeholder="Create a strong password"
+                [class.error]="password?.invalid && password?.touched"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePasswordVisibility()"
+                [title]="showPassword ? 'Hide password' : 'Show password'"
+              >
+                <svg *ngIf="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg *ngIf="showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+            <span class="error-text" *ngIf="password?.invalid && password?.touched">
+              <span *ngIf="password?.errors?.['required']">Password is required</span>
+              <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</span>
+            </span>
+          </div>
+
+          <!-- Confirm Password Field -->
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <div class="password-input-wrapper">
+              <input
+                [type]="showConfirmPassword ? 'text' : 'password'"
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                class="form-input"
+                placeholder="Re-enter your password"
+                [class.error]="(confirmPassword?.invalid || registerForm.errors?.['passwordMismatch']) && confirmPassword?.touched"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="toggleConfirmPasswordVisibility()"
+                [title]="showConfirmPassword ? 'Hide password' : 'Show password'"
+              >
+                <svg *ngIf="!showConfirmPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg *ngIf="showConfirmPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+            <span class="error-text" *ngIf="confirmPassword?.invalid && confirmPassword?.touched">
+              <span *ngIf="confirmPassword?.errors?.['required']">Please confirm your password</span>
+            </span>
+            <span class="error-text" *ngIf="registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched">
+              Passwords do not match
+            </span>
+          </div>
+
+          <!-- Terms Checkbox -->
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                formControlName="agree"
+                class="checkbox-input"
+              />
+              <span>I agree to the 
+                <a href="#terms" class="terms-link">Terms & Conditions</a> and 
+                <a href="#privacy" class="terms-link">Privacy Policy</a>
+              </span>
+            </label>
+            <span class="error-text" *ngIf="agree?.invalid && agree?.touched">
+              You must agree to the terms to continue
+            </span>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            [disabled]="registerForm.invalid || isLoading"
+          >
+            <span *ngIf="!isLoading">Create Account</span>
+            <span *ngIf="isLoading" class="loading-spinner">
+              <svg viewBox="0 0 50 50">
+                <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="2"></circle>
+              </svg>
+              Creating account...
+            </span>
+          </button>
+        </form>
+
+        <!-- Sign In Link -->
+        <div class="form-signup">
+          <p>Already have an account? 
+            <a [routerLink]="['/auth/login']" class="signup-link">Sign in here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
